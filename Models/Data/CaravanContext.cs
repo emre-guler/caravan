@@ -16,5 +16,7 @@ namespace Caravan.Data
         }
 
         // Entities here.
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<CustomerSupplierAddress> customerSuppliersAddresses { get; set;}
     }
 }
