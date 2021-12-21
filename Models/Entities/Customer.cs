@@ -14,7 +14,7 @@ namespace Caravan.Entities
         public bool IsMailAddressVerified { get; set; }
 
         // Trendyol Data
-        public int? SellerId { get; set; }
+        public int? SellerId { get; set; } // SellerId ve SupplierId aynı şey.
         public string ApiKey { get; set; }
         public string ApiSecret { get; set; }   
         public DateTime? LastUpdateTrendyolData { get; set; } 
