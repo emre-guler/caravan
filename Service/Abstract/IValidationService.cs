@@ -1,4 +1,4 @@
-using Caravan.Model;
+using Caravan.Models;
 
 namespace Caravan.Interfaces
 {

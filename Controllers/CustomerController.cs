@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Caravan.Interfaces;
-using Caravan.Model;
+using Caravan.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Caravan.Controllers

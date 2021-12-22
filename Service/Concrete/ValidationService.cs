@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Caravan.Interfaces;
-using Caravan.Model;
+using Caravan.Models;
 
 namespace Caravan.Service
 {

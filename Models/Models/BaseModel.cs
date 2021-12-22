@@ -1,4 +1,4 @@
-namespace Caravan.Model
+namespace Caravan.Models
 {
     public class BaseModel
     {
