@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Caravan.CustomAttributes;
 
-namespace Caravan.Model
+namespace Caravan.Models
 {
     public class Register : BaseModel
     {
