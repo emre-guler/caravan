@@ -47,8 +47,8 @@ namespace Caravan.Service
         {
             if(attributeData.NamedArguments.Count() == 2)
             {
-                int minLength = int.Parse(attributeData.NamedArguments[0].TypedValue.ToString());
-                int maxLength = int.Parse(attributeData.NamedArguments[1].TypedValue.ToString());
+                int minLength = int.Parse(attributeData.NamedArguments[0].TypedValue.Value.ToString());
+                int maxLength = int.Parse(attributeData.NamedArguments[1].TypedValue.Value.ToString());
 
                 if(minLength < (propValue.ToString().Length) && (propValue.ToString().Length) < maxLength)
                 {
@@ -60,7 +60,7 @@ namespace Caravan.Service
             {
                 if(attributeData.NamedArguments[0].MemberName == "Min")
                 {
-                    int minLength = int.Parse(attributeData.NamedArguments[0].TypedValue.ToString());
+                    int minLength = int.Parse(attributeData.NamedArguments[0].TypedValue.Value.ToString());
                     if(minLength < propValue.ToString().Length)
                     {
                         return true;   
@@ -69,7 +69,7 @@ namespace Caravan.Service
                 }
                 else 
                 {
-                    int maxLength = int.Parse(attributeData.NamedArguments[0].TypedValue.ToString());
+                    int maxLength = int.Parse(attributeData.NamedArguments[0].TypedValue.Value.ToString());
                     if(propValue.ToString().Length < maxLength)
                     {
                         return true;

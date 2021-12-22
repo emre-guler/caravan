@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Carvan.CustomAttributes;
+using Caravan.CustomAttributes;
 
 namespace Caravan.Model
 {

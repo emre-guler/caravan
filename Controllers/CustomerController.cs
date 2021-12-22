@@ -34,7 +34,7 @@ namespace Caravan.Controllers
             {
                 return RedirectToAction("Home");
             }
-            return RedirectToAction("Login", new { error = "validationerror" });
+            return RedirectToAction("Register", new { error = "validationerror" });
         }
     }
 }

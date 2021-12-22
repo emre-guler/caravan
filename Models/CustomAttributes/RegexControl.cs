@@ -1,6 +1,6 @@
 using System;
 
-namespace Carvan.CustomAttributes
+namespace Caravan.CustomAttributes
 {
     public class RegexControl : Attribute
     {
