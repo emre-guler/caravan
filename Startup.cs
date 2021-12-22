@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Caravan.Data;
+using Caravan.Interfaces;
+using Caravan.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +28,7 @@ namespace Caravan
         {
             services.AddControllersWithViews();
             services.AddDbContext<CaravanContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
+            services.AddScoped(typeof(IValidationService<>), typeof(ValidationService<>));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
