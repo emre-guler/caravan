@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Caravan.Interfaces;
 using Caravan.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Caravan.Controllers
 {
@@ -30,11 +31,15 @@ namespace Caravan.Controllers
         [HttpPost("/customer/register")]
         public async Task<IActionResult> Register(Register register)
         {
-            if(_registerValidationService.IsValid(register))
+            var modelErrors = _registerValidationService.IsValid(register);
+            if(modelErrors.Count > 0)
             {
-                return RedirectToAction("Home");
+                string errorsJson = JsonConvert.SerializeObject(modelErrors);
+                return RedirectToAction("Register", new { error = "validationerror", errorDetail = errorsJson });
             }
-            return RedirectToAction("Register", new { error = "validationerror" });
+            
+            return RedirectToAction("Home");
+
         }
     }
 }

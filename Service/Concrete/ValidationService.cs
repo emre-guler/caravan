@@ -10,28 +10,37 @@ namespace Caravan.Service
 {
     public class ValidationService<T> : IValidationService<T> where T : BaseModel
     {
-        public bool IsValid(T model)
+        List<ErrorModel> modelErrors = new List<ErrorModel>();
+        public List<ErrorModel> IsValid(T model)
         {
             var props = model.GetType().GetProperties();
             foreach(var prop in props)
             {
-                var a = prop.GetCustomAttributesData();
-                if(!this.ControlAttributes(a, prop.GetValue(model)))
-                {
-                    return false;
-                }
+                var attributes = prop.GetCustomAttributesData();
+                this.ControlAttributes(prop, attributes, prop.GetValue(model));
             }
-            return true;
+            return modelErrors;
         }
 
-        public bool ControlAttributes(IList<CustomAttributeData> attributes, object propValue)
+        public void ControlAttributes(PropertyInfo prop, IList<CustomAttributeData> attributes, object propValue)
         {
             foreach (var attribute in attributes)
             {
+                if(attribute.AttributeType.Name == "ErrorMessage")
+                {
+                    continue;
+                }
                 var methodInfo = this.GetType().GetMethod($"Control{attribute.AttributeType.Name}");
                 var response = methodInfo.Invoke(this, new object[] { attribute, propValue});
+                if(!Convert.ToBoolean(response))
+                {
+                    modelErrors.Add(new ErrorModel 
+                    {
+                        Title = "",
+                        Message = ""
+                    });
+                }
             }
-            return true;
         }
 
         public bool ControlRequiredArea(CustomAttributeData attributeData, object propValue)
