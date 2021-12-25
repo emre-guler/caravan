@@ -37,7 +37,6 @@ namespace Caravan.Controllers
                 string errorsJson = JsonConvert.SerializeObject(modelErrors);
                 return RedirectToAction("Register", new { error = "validationerror", errorDetail = errorsJson });
             }
-            
             return RedirectToAction("Home");
 
         }

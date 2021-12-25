@@ -36,8 +36,8 @@ namespace Caravan.Service
                 {
                     modelErrors.Add(new ErrorModel 
                     {
-                        Title = "",
-                        Message = ""
+                        Title = attributes.FirstOrDefault(x => x.AttributeType.Name == "ErrorMessage").NamedArguments[0].ToString(), // 0. index bize Title kısmını getirir.
+                        Message = attributes.FirstOrDefault(x => x.AttributeType.Name == "ErrorMessage").NamedArguments[1].ToString() // 1. index bize Message kısmını getirir.
                     });
                 }
             }

@@ -21,7 +21,7 @@ namespace Caravan.Models
         [RequiredArea]
         [CharacterLimit(Min = 6)]
         [RegexControl(RegexPattern = "")]
-        [ErrorMessage(Title = "MailAddress", Message = "Bu alan boş geçilemez ve en az 6 karakterden oluşmalıdır.")]
+        [ErrorMessage(Title = "MailAddressError", Message = "Bu alan boş geçilemez ve en az 6 karakterden oluşmalıdır.")]
         public string MailAddress { get; set; }
 
 
