@@ -6,6 +6,7 @@ using Caravan.Data;
 using Caravan.Entities;
 using Caravan.Interfaces;
 using Caravan.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Caravan.Service
 {
@@ -25,7 +26,7 @@ namespace Caravan.Service
         public async Task<List<ErrorModel>> Login(Login loginData)
         {
             List<ErrorModel> modelErrors = new List<ErrorModel>();
-            var customerControl = _db.Customers.FirstOrDefault(x => x.MailAddress == loginData.MailAddress && !x.DeletedAt.HasValue);
+            var customerControl = await _db.Customers.FirstOrDefaultAsync(x => x.MailAddress == loginData.MailAddress && !x.DeletedAt.HasValue);
             if(customerControl is not null)
             {
                 if(BCrypt.Net.BCrypt.Verify(loginData.Password, customerControl.Password))
@@ -44,7 +45,7 @@ namespace Caravan.Service
         public async Task<List<ErrorModel>> Register(Register registerData)
         {
             List<ErrorModel> modelErrors = new List<ErrorModel>();
-            var mailControl = _db.Customers.FirstOrDefault(x => x.MailAddress == registerData.MailAddress  && x.PhoneNumber == registerData.PhoneNumber && !x.DeletedAt.HasValue , null);
+            var mailControl = await _db.Customers.FirstOrDefaultAsync(x => x.MailAddress == registerData.MailAddress  && x.PhoneNumber == registerData.PhoneNumber && !x.DeletedAt.HasValue);
             if(mailControl is not null)
             {
                 var customerData = _mapper.Map<Customer>(registerData);
