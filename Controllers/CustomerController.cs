@@ -10,13 +10,16 @@ namespace Caravan.Controllers
     public class CustomerController : Controller
     {
         private IValidationService<Register> _registerValidationService;
+        private IValidationService<Login> _loginValidationService;
         private ICustomerService _customerService;
         public CustomerController(
             IValidationService<Register> registerValidationService,
+            IValidationService<Login> loginValidationService,
             ICustomerService customerService
         )
         {
             _registerValidationService = registerValidationService;
+            _loginValidationService = loginValidationService;
             _customerService = customerService;
         }
         
@@ -46,8 +49,26 @@ namespace Caravan.Controllers
             {
                 return RedirectToAction("Login");
             }
-            string errJson = JsonConvert.SerializeObject(modelErrors);
+            string errJson = JsonConvert.SerializeObject(registerErrors);
             return RedirectToAction("Register", new { error = "registererror", errorDetail = errJson });
+        }
+
+        [HttpPost("/customer/login")]
+        public async Task<IActionResult> Login(Login login)
+        {
+            var modelErrors = _loginValidationService.IsValid(login);
+            if(modelErrors.Count > 0)
+            {
+                string errorsJson = JsonConvert.SerializeObject(modelErrors);
+                return RedirectToAction("Login", new { error = "validationerror", errorDetail = errorsJson });
+            }
+            var loginErrors = await _customerService.Login(login);
+            if(modelErrors.Count == 0)
+            {
+                return RedirectToAction("Panel");
+            }
+            string errJson = JsonConvert.SerializeObject(loginErrors);
+            return RedirectToAction("Login", new { error = "invalidcredentials", errorDetail = errJson });
         }
     }
 }

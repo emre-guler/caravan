@@ -7,5 +7,6 @@ namespace Caravan.Interfaces
     public interface ICustomerService
     {
         Task<List<ErrorModel>> Register(Register registerData);
+        Task<List<ErrorModel>> Login(Login loginData);
     }
 }

@@ -22,11 +22,30 @@ namespace Caravan.Service
             _db = db;
         }
 
+        public async Task<List<ErrorModel>> Login(Login loginData)
+        {
+            List<ErrorModel> modelErrors = new List<ErrorModel>();
+            var customerControl = _db.Customers.FirstOrDefault(x => x.MailAddress == loginData.MailAddress && !x.DeletedAt.HasValue);
+            if(customerControl is not null)
+            {
+                if(BCrypt.Net.BCrypt.Verify(loginData.Password, customerControl.Password))
+                {
+                    return modelErrors;
+                }
+            }
+            modelErrors.Add(new ErrorModel 
+            {
+                Title = "InvalidCredentials",
+                Message = "Mail adresi veya şifre hatalı, tekrar deneyin."
+            });
+            return modelErrors;
+        }
+
         public async Task<List<ErrorModel>> Register(Register registerData)
         {
             List<ErrorModel> modelErrors = new List<ErrorModel>();
-            var mailControl = _db.Customers.FirstOrDefault(x => x.MailAddress == registerData.MailAddress  && x.PhoneNumber == registerData.PhoneNumber , null);
-            if(mailControl != null)
+            var mailControl = _db.Customers.FirstOrDefault(x => x.MailAddress == registerData.MailAddress  && x.PhoneNumber == registerData.PhoneNumber && !x.DeletedAt.HasValue , null);
+            if(mailControl is not null)
             {
                 var customerData = _mapper.Map<Customer>(registerData);
                 customerData.Password = BCrypt.Net.BCrypt.HashPassword(customerData.Password);
