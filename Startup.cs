@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Caravan.Data;
 using Caravan.Interfaces;
+using Caravan.Mapping;
 using Caravan.Service;
 using EasyCaching.Core.Configurations;
 using Microsoft.AspNetCore.Builder;
@@ -13,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using StackExchange.Redis;
 
 namespace Caravan
 {
@@ -28,9 +29,11 @@ namespace Caravan
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(MappingProfile));
             services.AddControllersWithViews();
             services.AddDbContext<CaravanContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString")));
             services.AddScoped(typeof(IValidationService<>), typeof(ValidationService<>));
+            services.AddScoped<ICustomerService, CustomerService>();
             services.AddEasyCaching(opitons => 
             {
                 opitons.UseRedis(redisConfig => 

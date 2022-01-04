@@ -10,10 +10,14 @@ namespace Caravan.Controllers
     public class CustomerController : Controller
     {
         private IValidationService<Register> _registerValidationService;
-        
-        public CustomerController(IValidationService<Register> registerValidationService)
+        private ICustomerService _customerService;
+        public CustomerController(
+            IValidationService<Register> registerValidationService,
+            ICustomerService customerService
+        )
         {
             _registerValidationService = registerValidationService;
+            _customerService = customerService;
         }
         
         [HttpGet("/customer/login")]
@@ -37,8 +41,14 @@ namespace Caravan.Controllers
                 string errorsJson = JsonConvert.SerializeObject(modelErrors);
                 return RedirectToAction("Register", new { error = "validationerror", errorDetail = errorsJson });
             }
-            return RedirectToAction("Home");
-
+            var isRegister = await _customerService.Register(register);
+            if(isRegister)
+            {
+                return RedirectToAction("Home");
+            }
+            modelErrors.Add(new ErrorModel { Title = "ServerError", Message = "SomethingWentWrong" });
+            string errJson = JsonConvert.SerializeObject(modelErrors);
+            return RedirectToAction("Register", new { error = "servererror", errorDetail = errJson });
         }
     }
 }
