@@ -9,7 +9,6 @@ namespace Caravan.Entities
         public string PhoneNumber { get; set; }
         public string MailAddress {get; set; }
         public string Password { get; set; }
-        public string PasswordSalt { get; set; }
         public bool IsPhoneVerified { get; set; }
         public bool IsMailAddressVerified { get; set; }
 

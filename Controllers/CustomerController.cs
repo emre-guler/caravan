@@ -41,14 +41,13 @@ namespace Caravan.Controllers
                 string errorsJson = JsonConvert.SerializeObject(modelErrors);
                 return RedirectToAction("Register", new { error = "validationerror", errorDetail = errorsJson });
             }
-            var isRegister = await _customerService.Register(register);
-            if(isRegister)
+            var registerErrors = await _customerService.Register(register);
+            if(modelErrors.Count == 0)
             {
-                return RedirectToAction("Home");
+                return RedirectToAction("Login");
             }
-            modelErrors.Add(new ErrorModel { Title = "ServerError", Message = "SomethingWentWrong" });
             string errJson = JsonConvert.SerializeObject(modelErrors);
-            return RedirectToAction("Register", new { error = "servererror", errorDetail = errJson });
+            return RedirectToAction("Register", new { error = "registererror", errorDetail = errJson });
         }
     }
 }
