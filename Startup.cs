@@ -27,7 +27,7 @@ namespace Caravan
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<CaravanContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
+            services.AddDbContext<CaravanContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString")));
             services.AddScoped(typeof(IValidationService<>), typeof(ValidationService<>));
         }
 
