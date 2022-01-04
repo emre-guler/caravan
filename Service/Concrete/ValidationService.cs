@@ -88,16 +88,5 @@ namespace Caravan.Service
             }
             return false;
         }
-
-        public bool ControlRegexControl(CustomAttributeData attributeData, object propValue)
-        {
-            string regexPattern = attributeData.NamedArguments[0].TypedValue.ToString();
-            Regex regex = new Regex(regexPattern);
-            if(regex.Match(propValue.ToString()).Success)
-            {
-                return true;
-            }
-            return false;
-        }
     }
 }
