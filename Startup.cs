@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Caravan.Data;
 using Caravan.Interfaces;
 using Caravan.Service;
+using EasyCaching.Core.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StackExchange.Redis;
 
 namespace Caravan
 {
@@ -29,6 +31,15 @@ namespace Caravan
             services.AddControllersWithViews();
             services.AddDbContext<CaravanContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString")));
             services.AddScoped(typeof(IValidationService<>), typeof(ValidationService<>));
+            services.AddEasyCaching(opitons => 
+            {
+                opitons.UseRedis(redisConfig => 
+                {
+                    redisConfig.DBConfig.Endpoints.Add(new ServerEndPoint("localhost", 6379));
+                    redisConfig.DBConfig.AllowAdmin = true;
+                },
+                "redis");
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
