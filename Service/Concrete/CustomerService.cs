@@ -46,11 +46,13 @@ namespace Caravan.Service
         {
             List<ErrorModel> modelErrors = new List<ErrorModel>();
             var mailControl = await _db.Customers.FirstOrDefaultAsync(x => x.MailAddress == registerData.MailAddress  && x.PhoneNumber == registerData.PhoneNumber && !x.DeletedAt.HasValue);
-            if(mailControl is not null)
+            if(mailControl is null)
             {
                 var customerData = _mapper.Map<Customer>(registerData);
                 customerData.Password = BCrypt.Net.BCrypt.HashPassword(customerData.Password);
+                customerData.CreatedAt = System.DateTime.UtcNow;
                 await _db.AddAsync(customerData);
+                await _db.SaveChangesAsync();
                 return modelErrors;
             }
             modelErrors.Add(new ErrorModel 
