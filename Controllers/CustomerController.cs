@@ -45,7 +45,7 @@ namespace Caravan.Controllers
                 return RedirectToAction("Register", new { error = "validationerror", errorDetail = errorsJson });
             }
             var registerErrors = await _customerService.Register(register);
-            if(modelErrors.Count == 0)
+            if(registerErrors.Count == 0)
             {
                 return RedirectToAction("Login");
             }
@@ -63,7 +63,7 @@ namespace Caravan.Controllers
                 return RedirectToAction("Login", new { error = "validationerror", errorDetail = errorsJson });
             }
             var loginErrors = await _customerService.Login(login);
-            if(modelErrors.Count == 0)
+            if(loginErrors.Count == 0)
             {
                 return RedirectToAction("Panel");
             }
