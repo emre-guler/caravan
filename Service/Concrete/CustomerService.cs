@@ -29,7 +29,7 @@ namespace Caravan.Service
             var customerControl = await _db.Customers.FirstOrDefaultAsync(x => x.MailAddress == loginData.MailAddress && !x.DeletedAt.HasValue);
             if(customerControl is not null)
             {
-                if(BCrypt.Net.BCrypt.Verify(loginData.Password, customerControl.Password))
+                if(loginData.Password == customerControl.Password)
                 {
                     return modelErrors;
                 }
@@ -49,7 +49,8 @@ namespace Caravan.Service
             if(mailControl is null)
             {
                 var customerData = _mapper.Map<Customer>(registerData);
-                customerData.Password = BCrypt.Net.BCrypt.HashPassword(customerData.Password);
+
+                customerData.Password = customerData.Password;
                 customerData.CreatedAt = System.DateTime.UtcNow;
                 await _db.AddAsync(customerData);
                 await _db.SaveChangesAsync();
