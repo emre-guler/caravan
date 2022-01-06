@@ -62,5 +62,25 @@ namespace Caravan.Service
             });
             return modelErrors;
         }
+
+        public async Task<List<ErrorModel>> SetApiData(ApiData apiData)
+        {
+            List<ErrorModel> modelErrors = new();
+            var userData = await _db.Customers.FirstOrDefaultAsync(x => x.Id == 1);
+            if(userData != null)
+            {
+                userData.SellerId = apiData.SellerId;
+                userData.ApiKey = apiData.ApiKey;
+                userData.ApiSecret = apiData.ApiSecret;
+                await _db.SaveChangesAsync();
+                return modelErrors;
+            }
+            modelErrors.Add(new ErrorModel 
+            {
+                Title = "NotFound",
+                Message = "Kullanıcı bulunamadı tekrar deneyin."
+            });
+            return modelErrors;
+        }
     }
 }

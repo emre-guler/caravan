@@ -35,6 +35,12 @@ namespace Caravan.Controllers
             return View();
         }
 
+        [HttpGet("/customer/setApiData")]
+        public IActionResult SetApiData()
+        {
+            return View();
+        }        
+
         [HttpPost("/customer/register")]
         public async Task<IActionResult> Register(Register register)
         {
@@ -70,5 +76,17 @@ namespace Caravan.Controllers
             string errJson = JsonConvert.SerializeObject(loginErrors);
             return RedirectToAction("Login", new { error = "invalidcredentials", errorDetail = errJson });
         }
+
+        [HttpPost("/customer/setApiData")]
+        public async Task<IActionResult> SetApiData(ApiData apidata)
+        {
+            var modelErrors = await _customerService.SetApiData(apidata);
+            if(modelErrors.Count == 0)
+            {
+                return RedirectToAction("SetApiData");
+            }
+            string errJson = JsonConvert.SerializeObject(modelErrors);
+            return RedirectToAction("SetApiData", new { error = "error", errorDetail = errJson });
+        }        
     }
 }
