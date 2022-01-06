@@ -39,6 +39,7 @@ namespace Caravan
             services.AddDbContext<CaravanContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString")));
             services.AddScoped(typeof(IValidationService<>), typeof(ValidationService<>));
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ICurrentCustomerService, CurrentCustomerService>();
             services.AddEasyCaching(opitons => 
             {
                 opitons.UseRedis(redisConfig => 

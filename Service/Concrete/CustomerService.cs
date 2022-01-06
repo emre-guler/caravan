@@ -88,5 +88,10 @@ namespace Caravan.Service
         {
             return await _db.Customers.FirstOrDefaultAsync(x => x.MailAddress == mailAddress && !x.DeletedAt.HasValue);
         }
+
+        public async Task<Customer> GetCustomerById(int Id)
+        {
+            return await _db.Customers.FirstOrDefaultAsync(x => x.Id == Id);
+        }
     }
 }
