@@ -39,6 +39,13 @@ namespace Caravan.Controllers
             return View();
         }
 
+        [HttpGet("/customer/logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Login");
+        }
+
         // [HttpGet("/customer/setApiData")]
         // public IActionResult SetApiData()
         // {
