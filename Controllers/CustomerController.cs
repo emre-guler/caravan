@@ -35,11 +35,11 @@ namespace Caravan.Controllers
             return View();
         }
 
-        [HttpGet("/customer/setApiData")]
-        public IActionResult SetApiData()
-        {
-            return View();
-        }        
+        // [HttpGet("/customer/setApiData")]
+        // public IActionResult SetApiData()
+        // {
+        //     return View();
+        // }        
 
         [HttpPost("/customer/register")]
         public async Task<IActionResult> Register(Register register)
