@@ -83,5 +83,10 @@ namespace Caravan.Service
             });
             return modelErrors;
         }
+
+        public async Task<Customer> GetCustomerByMailAddress(string mailAddress)
+        {
+            return await _db.Customers.FirstOrDefaultAsync(x => x.MailAddress == mailAddress && !x.DeletedAt.HasValue);
+        }
     }
 }

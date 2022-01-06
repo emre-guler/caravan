@@ -8,6 +8,7 @@ using Caravan.Interfaces;
 using Caravan.Mapping;
 using Caravan.Service;
 using EasyCaching.Core.Configurations;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,10 @@ namespace Caravan
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(x => {
+                    x.LoginPath = "/customer/login";
+                });
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddControllersWithViews();
             services.AddDbContext<CaravanContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString")));
@@ -61,7 +66,7 @@ namespace Caravan
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

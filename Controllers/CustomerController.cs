@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Caravan.Interfaces;
 using Caravan.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -71,6 +75,16 @@ namespace Caravan.Controllers
             var loginErrors = await _customerService.Login(login);
             if(loginErrors.Count == 0)
             {
+                var userData = await _customerService.GetCustomerByMailAddress(login.MailAddress);
+                string userDataJson = JsonConvert.SerializeObject(userData);
+                var userIdentity = new ClaimsIdentity(
+                    new List<Claim> {
+                        new Claim(ClaimTypes.Name, userDataJson)
+                    },
+                    "Login"
+                );
+                ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
+                await HttpContext.SignInAsync(principal);
                 return RedirectToAction("Panel");
             }
             string errJson = JsonConvert.SerializeObject(loginErrors);
@@ -78,6 +92,7 @@ namespace Caravan.Controllers
         }
 
         [HttpPost("/customer/setApiData")]
+        [Authorize]
         public async Task<IActionResult> SetApiData(ApiData apidata)
         {
             var modelErrors = await _customerService.SetApiData(apidata);
