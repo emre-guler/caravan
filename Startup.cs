@@ -40,6 +40,8 @@ namespace Caravan
             services.AddScoped(typeof(IValidationService<>), typeof(ValidationService<>));
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ICurrentCustomerService, CurrentCustomerService>();
+            services.AddScoped<IRedisService, RedisService>();
+            services.AddScoped<IMailService, MailService>();
             services.AddEasyCaching(opitons => 
             {
                 opitons.UseRedis(redisConfig => 

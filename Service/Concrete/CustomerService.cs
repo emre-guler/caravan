@@ -14,13 +14,16 @@ namespace Caravan.Service
     {
         private readonly IMapper _mapper;
         private readonly CaravanContext _db;
+        private readonly IMailService _mailService;
         public CustomerService(
             IMapper mapper,
-            CaravanContext db
+            CaravanContext db,
+            IMailService mailService
         )
         {
             _mapper = mapper;
             _db = db;
+            _mailService = mailService;
         }
 
         public async Task<List<ErrorModel>> Login(Login loginData)
@@ -107,6 +110,11 @@ namespace Caravan.Service
             {
                 currentCustomer.Password = passwordData.NewPassword;
                 await _db.SaveChangesAsync();
+                EmailConfiguration passwordMail = new();
+                passwordMail.To = currentCustomer.MailAddress;
+                passwordMail.Subject = "Şifreniz Yenilendi";
+                passwordMail.Body = "Şifreniz değiştirilmiştir!";
+                _mailService.SendMail(passwordMail);
                 return modelErrors; 
             }
             modelErrors.Add(new ErrorModel 
