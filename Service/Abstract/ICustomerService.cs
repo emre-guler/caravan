@@ -9,7 +9,8 @@ namespace Caravan.Interfaces
     {
         Task<List<ErrorModel>> Register(Register registerData);
         Task<List<ErrorModel>> Login(Login loginData);
-        Task<List<ErrorModel>> SetApiData(ApiData apiData);
+        Task<List<ErrorModel>> SetApiData(ApiData apiData, Customer currentCustomer);
+        Task<ApiData> GetApiData(Customer currentCustomer);
         Task<Customer> GetCustomerByMailAddress(string mailAddress);
         Task<Customer> GetCustomerById(int Id);
     }

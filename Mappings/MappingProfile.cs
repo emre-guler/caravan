@@ -9,6 +9,7 @@ namespace Caravan.Mapping
         public MappingProfile()
         {
             CreateMap<Register, Customer>();
+            CreateMap<ApiData, Customer>();
         }
     }
 }

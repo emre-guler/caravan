@@ -64,10 +64,16 @@ namespace Caravan.Service
             return modelErrors;
         }
 
-        public async Task<List<ErrorModel>> SetApiData(ApiData apiData)
+        public async Task<ApiData> GetApiData(Customer currentCustomer)
+        {
+            var userData = await _db.Customers.FirstOrDefaultAsync(x => x.Id == currentCustomer.Id);
+            return _mapper.Map<ApiData>(userData);
+        } 
+        
+        public async Task<List<ErrorModel>> SetApiData(ApiData apiData, Customer currentCustomer)
         {
             List<ErrorModel> modelErrors = new();
-            var userData = await _db.Customers.FirstOrDefaultAsync(x => x.Id == 1);
+            var userData = await _db.Customers.FirstOrDefaultAsync(x => x.Id == currentCustomer.Id);
             if(userData != null)
             {
                 userData.SellerId = apiData.SellerId;
