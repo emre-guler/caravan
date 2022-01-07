@@ -28,12 +28,14 @@ namespace Caravan.Controllers
         }
         
         [HttpGet("/customer/login")]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpGet("/customer/register")]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
@@ -44,13 +46,7 @@ namespace Caravan.Controllers
         {
             await HttpContext.SignOutAsync();
             return RedirectToAction("Login");
-        }
-
-        // [HttpGet("/customer/setApiData")]
-        // public IActionResult SetApiData()
-        // {
-        //     return View();
-        // }        
+        }   
 
         [HttpPost("/customer/register")]
         public async Task<IActionResult> Register(Register register)
@@ -92,23 +88,10 @@ namespace Caravan.Controllers
                 );
                 ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
                 await HttpContext.SignInAsync(principal);
-                return RedirectToAction("Panel");
+                return RedirectToAction("Index", "Trendyol");
             }
             string errJson = JsonConvert.SerializeObject(loginErrors);
             return RedirectToAction("Login", new { error = "invalidcredentials", errorDetail = errJson });
-        }
-
-        [HttpPost("/customer/setApiData")]
-        [Authorize]
-        public async Task<IActionResult> SetApiData(ApiData apidata)
-        {
-            var modelErrors = await _customerService.SetApiData(apidata);
-            if(modelErrors.Count == 0)
-            {
-                return RedirectToAction("SetApiData");
-            }
-            string errJson = JsonConvert.SerializeObject(modelErrors);
-            return RedirectToAction("SetApiData", new { error = "error", errorDetail = errJson });
-        }        
+        }      
     }
 }
