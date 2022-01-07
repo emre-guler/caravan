@@ -4,7 +4,7 @@ using Caravan.Models;
 
 namespace Caravan.Mapping
 {
-    public class MappingProfile : Profile
+    public class MappingProfile : AutoMapper.Profile
     {
         public MappingProfile()
         {

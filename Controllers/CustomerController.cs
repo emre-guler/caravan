@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Caravan.Interfaces;
 using Caravan.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -16,15 +17,21 @@ namespace Caravan.Controllers
         private IValidationService<Register> _registerValidationService;
         private IValidationService<Login> _loginValidationService;
         private ICustomerService _customerService;
+        private ICurrentCustomerService _currentCustomerService;
+        private IMapper _mapper;
         public CustomerController(
             IValidationService<Register> registerValidationService,
             IValidationService<Login> loginValidationService,
-            ICustomerService customerService
+            ICustomerService customerService,
+            ICurrentCustomerService currentCustomerService,
+            IMapper mapper
         )
         {
             _registerValidationService = registerValidationService;
             _loginValidationService = loginValidationService;
             _customerService = customerService;
+            _currentCustomerService = currentCustomerService;
+            _mapper = mapper;
         }
         
         [HttpGet("/customer/login")]
@@ -92,6 +99,15 @@ namespace Caravan.Controllers
             }
             string errJson = JsonConvert.SerializeObject(loginErrors);
             return RedirectToAction("Login", new { error = "invalidcredentials", errorDetail = errJson });
-        }      
+        }
+
+        [HttpGet("/customer/profile")]
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var userData = await _currentCustomerService.GetCurrentCustomer(User.Identity);
+            var viewModel = _mapper.Map<Caravan.Models.Profile>(userData);
+            return View(viewModel);    
+        }
     }
 }
