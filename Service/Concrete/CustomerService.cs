@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,15 +16,18 @@ namespace Caravan.Service
         private readonly IMapper _mapper;
         private readonly CaravanContext _db;
         private readonly IMailService _mailService;
+        private readonly IRedisService _redisService;
         public CustomerService(
             IMapper mapper,
             CaravanContext db,
-            IMailService mailService
+            IMailService mailService,
+            IRedisService redisService
         )
         {
             _mapper = mapper;
             _db = db;
             _mailService = mailService;
+            _redisService = redisService;
         }
 
         public async Task<List<ErrorModel>> Login(Login loginData)
@@ -83,6 +87,7 @@ namespace Caravan.Service
                 userData.ApiKey = apiData.ApiKey;
                 userData.ApiSecret = apiData.ApiSecret;
                 await _db.SaveChangesAsync();
+                await _redisService.Add($"logs-{currentCustomer.Id}-{DateTime.UtcNow}", "Api data has been changed!");
                 return modelErrors;
             }
             modelErrors.Add(new ErrorModel 
@@ -115,6 +120,7 @@ namespace Caravan.Service
                 passwordMail.Subject = "Şifreniz Yenilendi";
                 passwordMail.Body = "Şifreniz değiştirilmiştir!";
                 _mailService.SendMail(passwordMail);
+                await _redisService.Add($"logs-{currentCustomer.Id}-{DateTime.UtcNow}", "Password has been changed!");
                 return modelErrors; 
             }
             modelErrors.Add(new ErrorModel 

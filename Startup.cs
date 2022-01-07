@@ -48,6 +48,7 @@ namespace Caravan
                 {
                     redisConfig.DBConfig.Endpoints.Add(new ServerEndPoint("localhost", 6379));
                     redisConfig.DBConfig.AllowAdmin = true;
+                    redisConfig.EnableLogging = true;
                 },
                 "redis");
             });
