@@ -109,5 +109,14 @@ namespace Caravan.Controllers
             var viewModel = _mapper.Map<Caravan.Models.Profile>(userData);
             return View(viewModel);    
         }
+
+        [HttpPost("/customer/changepassword")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePassword passwordData)
+        {
+            var userData = await _currentCustomerService.GetCurrentCustomer(User.Identity);
+            await _customerService.ChangePassword(passwordData, userData);
+            return View("Profile");
+        }
     }
 }

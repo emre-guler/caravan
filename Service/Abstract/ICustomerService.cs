@@ -13,5 +13,6 @@ namespace Caravan.Interfaces
         Task<ApiData> GetApiData(Customer currentCustomer);
         Task<Customer> GetCustomerByMailAddress(string mailAddress);
         Task<Customer> GetCustomerById(int Id);
+        Task<List<ErrorModel>> ChangePassword(ChangePassword passwordData, Customer currentCustomer);
     }
 }

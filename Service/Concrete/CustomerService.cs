@@ -99,5 +99,22 @@ namespace Caravan.Service
         {
             return await _db.Customers.FirstOrDefaultAsync(x => x.Id == Id);
         }
+
+        public async Task<List<ErrorModel>> ChangePassword(ChangePassword passwordData, Customer currentCustomer)
+        {
+            List<ErrorModel> modelErrors = new();
+            if(currentCustomer.Password == passwordData.OldPassword)
+            {
+                currentCustomer.Password = passwordData.NewPassword;
+                await _db.SaveChangesAsync();
+                return modelErrors; 
+            }
+            modelErrors.Add(new ErrorModel 
+            {
+                Title = "InvalidCredential",
+                Message = "Eski parola hatalı."
+            });
+            return modelErrors;
+        }
     }
 }
