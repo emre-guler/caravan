@@ -8,6 +8,8 @@ using Caravan.Interfaces;
 using Caravan.Mapping;
 using Caravan.Service;
 using EasyCaching.Core.Configurations;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,6 +44,7 @@ namespace Caravan
             services.AddScoped<ICurrentCustomerService, CurrentCustomerService>();
             services.AddScoped<IRedisService, RedisService>();
             services.AddScoped<IMailService, MailService>();
+            services.AddScoped<IRecurringJobService, RecurringJobService>();
             services.AddEasyCaching(opitons => 
             {
                 opitons.UseRedis(redisConfig => 
@@ -52,6 +55,8 @@ namespace Caravan
                 },
                 "redis");
             });
+            services.AddHangfire(config => config.UsePostgreSqlStorage(Configuration.GetConnectionString("DefaultConnectionString")));
+            RecurringJob.AddOrUpdate<RecurringJobService>(x => x.GetSuppliersAddresses() , "0 03 00 ? * *");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -65,6 +70,9 @@ namespace Caravan
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
