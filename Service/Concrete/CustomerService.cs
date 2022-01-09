@@ -130,5 +130,10 @@ namespace Caravan.Service
             });
             return modelErrors;
         }
+
+        public async Task<List<Customer>> GetAllCustomers()
+        {
+            return await _db.Customers.Where(x => !x.DeletedAt.HasValue && x.SellerId != null && x.ApiKey != null && x.ApiSecret != null).ToListAsync();
+        }
     }
 }
